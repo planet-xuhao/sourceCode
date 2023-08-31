@@ -40,6 +40,7 @@ public class TargetProxy implements InvocationHandler {
 
         return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                 new Class[]{interfaces}, this);
+    }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
