@@ -40,7 +40,9 @@ import java.util.*;
  */
 public class MapperMethod {
 
+  // SQL命令
   private final SqlCommand command;
+  // 方法签名
   private final MethodSignature method;
 
   public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
@@ -187,13 +189,14 @@ public class MapperMethod {
 
   }
 
-  //SQL命令，静态内部类
+  // SQL命令，静态内部类
   public static class SqlCommand {
 
     private final String name;
     private final SqlCommandType type;
 
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
+      // 接口名称.方法名 = 一条sql的id
       String statementName = mapperInterface.getName() + "." + method.getName();
       MappedStatement ms = null;
       if (configuration.hasStatement(statementName)) {

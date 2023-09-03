@@ -57,21 +57,21 @@ public class XMLStatementBuilder extends BaseBuilder {
     this.requiredDatabaseId = databaseId;
   }
 
-  //解析语句(select|insert|update|delete)
-//<select
-//  id="selectPerson"
-//  parameterType="int"
-//  parameterMap="deprecated"
-//  resultType="hashmap"
-//  resultMap="personResultMap"
-//  flushCache="false"
-//  useCache="true"
-//  timeout="10000"
-//  fetchSize="256"
-//  statementType="PREPARED"
-//  resultSetType="FORWARD_ONLY">
-//  SELECT * FROM PERSON WHERE ID = #{id}
-//</select>
+  // 解析语句(select|insert|update|delete)
+  //<select
+  //  id="selectPerson"
+  //  parameterType="int"
+  //  parameterMap="deprecated"
+  //  resultType="hashmap"
+  //  resultMap="personResultMap"
+  //  flushCache="false"
+  //  useCache="true"
+  //  timeout="10000"
+  //  fetchSize="256"
+  //  statementType="PREPARED"
+  //  resultSetType="FORWARD_ONLY">
+  //  SELECT * FROM PERSON WHERE ID = #{id}
+  //</select>
   public void parseStatementNode() {
     String id = context.getStringAttribute("id");
     String databaseId = context.getStringAttribute("databaseId");

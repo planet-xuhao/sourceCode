@@ -44,6 +44,15 @@ public class Test {
         // 4.调用UserMapper的所有方法都会先调用MapperProxy的invoke方法
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 
+        // 项目启动时会读取mybatis.xml配置文件，会依次解析xml节点，当解析到<mapper>节点时org.apache.ibatis.builder.xml.XMLConfigBuilder.mapperElement，会做如下动作：
+        // 1.读取到<mapper>节点时，判断是用包扫描的方式还是直接指定的xml文件路径
+        // 2.当找到类路径后，调用XMLMapperBuilder的parse方法org.apache.ibatis.builder.xml.XMLMapperBuilder.parse，来解析具体的xxxMapper.xml
+        // 3.解析mapper.xml中的各个节点，这里重点分析下<select>/<insert>/<update>/<delete>
+        // 4.调用statementParser.parseStatementNode()，解析每一个sql节点（select,insert这种）
+        // 5.得到解析sql节点中的所有属性后，调用builderAssistant.addMappedStatement
+        // 6.使用建造者模式将这些属性封装到一个MappedStatement中，并把这个MappedStatement放到configuration的mappedStatements
+        // 7.当第一次调用代理类的方法时，会new一个MapperMethod，该类有两个属性SqlCommand和MethodSignature，对于SqlCommand类，它是一个内部类，只要存储了sql，也就是mapperStatement的id和类型
+        // 8.
         List<User> users = userMapper.queryAllUser();
 
         users.forEach(System.out::println);

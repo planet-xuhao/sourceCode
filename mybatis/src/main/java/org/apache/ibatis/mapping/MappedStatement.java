@@ -44,7 +44,7 @@ public final class MappedStatement {
   private Integer timeout;
   private StatementType statementType;
   private ResultSetType resultSetType;
-  //SQL源码
+  // SQL源码
   private SqlSource sqlSource;
   private Cache cache;
   private ParameterMap parameterMap;
