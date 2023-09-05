@@ -283,9 +283,9 @@ public final class MappedStatement {
   }
   
   public BoundSql getBoundSql(Object parameterObject) {
-	//其实就是调用sqlSource.getBoundSql
+	// 其实就是调用sqlSource.getBoundSql
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
-    //剩下的可以暂时忽略
+    // 剩下的可以暂时忽略
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings == null || parameterMappings.isEmpty()) {
       boundSql = new BoundSql(configuration, boundSql.getSql(), parameterMap.getParameterMappings(), parameterObject);

@@ -233,6 +233,7 @@ public class MapperMethod {
     private final boolean returnsMany;
     private final boolean returnsMap;
     private final boolean returnsVoid;
+    // 返回类型
     private final Class<?> returnType;
     private final String mapKey;
     private final Integer resultHandlerIndex;

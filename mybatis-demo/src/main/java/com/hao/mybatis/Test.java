@@ -2,6 +2,7 @@ package com.hao.mybatis;
 
 import com.hao.mybatis.mapper.UserMapper;
 import com.hao.mybatis.po.User;
+import org.apache.ibatis.executor.SimpleExecutor;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -52,7 +53,15 @@ public class Test {
         // 5.得到解析sql节点中的所有属性后，调用builderAssistant.addMappedStatement
         // 6.使用建造者模式将这些属性封装到一个MappedStatement中，并把这个MappedStatement放到configuration的mappedStatements
         // 7.当第一次调用代理类的方法时，会new一个MapperMethod，该类有两个属性SqlCommand和MethodSignature，对于SqlCommand类，它是一个内部类，只要存储了sql，也就是mapperStatement的id和类型
-        // 8.
+        //   对于MethodSignature它其中的属性表示了这个方法返回的类型，参数的个数等等，也就是方法对象的描述
+        // 8.创建完MapperMethod后会调用execute方法，参数是sqlSession和执行参数，根据第7步获取的command判断需要执行的操作是什么select，还是update等等，
+        //   这里是select且返回的数目是多条，所以会执行executeForMany方法
+        // 10.随后判断是否有指定分页信息，如果没有则查0 - 2147483647条的数据，最终会调用到defaultSqlSession的selectList方法
+        // 11.在defaultSqlSession中通过接口方法名拿到对应的xml对象信息，也就是MappedStatement，随后专用执行器来查询结果CachingExecutor.query
+        // 12.通过MappedStatement得到boundSql对象，这里有待执行的sql信息，且有占位符，如果你开启了二级缓存，随后就是一些二级缓存的操作了
+        //    如果没有则直接调用BaseExecutor.query方法，获得单例的错误输出对象ErrorContext，再看缓存中是否有结果，有就处理，没有就去数据库查queryFromDatabase
+        // 13.这里就开始真正的查数据库了，就关联到了sqlSessionFactory.openSession()中设置Executor时设置的是什么，批量执行还是简单的执行，不设置就是SimpleExecutor
+        // 14.jdbc操作
         List<User> users = userMapper.queryAllUser();
 
         users.forEach(System.out::println);

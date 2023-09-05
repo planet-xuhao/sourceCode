@@ -40,11 +40,11 @@ public class ErrorContext {
   private ErrorContext() {
   }
 
-  //工厂方法，得到一个实例，一个线程一个实例
+  // 工厂方法，得到一个实例，一个线程一个实例
   public static ErrorContext instance() {
-      //因为是多线程，所以用了ThreadLocal  线程安全
+      // 因为是多线程，所以用了ThreadLocal  线程安全
     ErrorContext context = LOCAL.get();
-      //懒汉 单例模式
+      // 懒汉 单例模式
     if (context == null) {
       context = new ErrorContext();
       LOCAL.set(context);

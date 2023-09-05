@@ -143,7 +143,7 @@ public abstract class BaseExecutor implements Executor {
   @SuppressWarnings("unchecked")
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
-    //如果已经关闭，报错
+    // 如果已经关闭，报错
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
@@ -161,7 +161,7 @@ public abstract class BaseExecutor implements Executor {
         //若查到localCache缓存，处理localOutputParameterCache
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
-        //从数据库查
+        // 从数据库查
         list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
       }
     } finally {
@@ -319,6 +319,7 @@ public abstract class BaseExecutor implements Executor {
     //先向缓存中放入占位符？？？
     localCache.putObject(key, EXECUTION_PLACEHOLDER);
     try {
+      // 执行正在的查询操作
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     } finally {
       //最后删除占位符
