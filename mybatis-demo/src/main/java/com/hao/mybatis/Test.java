@@ -63,8 +63,9 @@ public class Test {
         // 13.这里就开始真正的查数据库了，就关联到了sqlSessionFactory.openSession()中设置Executor时设置的是什么，批量执行还是简单的执行，不设置就是SimpleExecutor
         // 14.通过configuration.newStatementHandler得到一个StatementHandler对象
         //    new RoutingStatementHandler根据<select>标签上的statementType属性选择相应的处理器，大部分情况下该属性都不会赋值，那么此时的处理器将会是PreparedStatementHandler
-        //    此时我们已经得到sql参数了，需要使用类似与jdbc的方式来执行sql，这里mybatis做了一层封装。获得Statement对象：
-        //    使用openConnection获得一个connection连接，判断statementMapper是否开启了debug级别的日志，如果开启了则会使用代理模式获得一个被代理过的连接对象，以便用来打印日志org.apache.ibatis.logging.jdbc.ConnectionLogger.invoke
+        //    随后调用prepareStatement，得到预编译的sql语句，在这里面，需要使用类似与jdbc的方式来执行sql，这里mybatis做了一层封装。获得Statement对象：
+        //    使用openConnection获得一个connection连接，mybatis中的连接会使用PooledDataSource作为一个数据连接池，从其中进行获取。org.apache.ibatis.datasource.pooled.PooledDataSource.getConnection(),真正获取连接的地方org.apache.ibatis.datasource.unpooled.UnpooledDataSource.doGetConnection(java.lang.String, java.lang.String)
+        //    判断statementMapper是否开启了debug级别的日志，如果开启了则会使用代理模式获得一个被代理过的连接对象，以便用来打印日志org.apache.ibatis.logging.jdbc.ConnectionLogger.invoke
         List<User> users = userMapper.queryAllUser();
 
         users.forEach(System.out::println);

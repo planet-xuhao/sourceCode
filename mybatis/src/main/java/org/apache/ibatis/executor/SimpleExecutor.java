@@ -69,10 +69,10 @@ public class SimpleExecutor extends BaseExecutor {
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
-      //新建一个StatementHandler
-      //这里看到ResultHandler传入了
+      // 新建一个StatementHandler
+      // 这里看到ResultHandler传入了
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
-      //准备语句
+      // 准备语句，预编译SQL语句
       stmt = prepareStatement(handler, ms.getStatementLog());
       //StatementHandler.query
       return handler.<E>query(stmt, resultHandler);
