@@ -132,11 +132,11 @@ public abstract class BaseExecutor implements Executor {
 
   //SqlSession.selectList会调用此方法
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
-    //得到绑定sql
+    // 得到绑定sql
     BoundSql boundSql = ms.getBoundSql(parameter);
-    //创建缓存Key
+    // 创建缓存Key
     CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
-    //查询
+    // 查询
     return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
  }
 
@@ -147,7 +147,7 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
-    //先清局部缓存，再查询.但仅查询堆栈为0，才清。为了处理递归调用
+    // 先清局部缓存，再查询.但仅查询堆栈为0，才清。为了处理递归调用
     if (queryStack == 0 && ms.isFlushCacheRequired()) {
       clearLocalCache();
     }
@@ -316,13 +316,13 @@ public abstract class BaseExecutor implements Executor {
   //从数据库查
   private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List<E> list;
-    //先向缓存中放入占位符？？？
+    // 先向缓存中放入占位符？？？
     localCache.putObject(key, EXECUTION_PLACEHOLDER);
     try {
       // 执行正在的查询操作
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     } finally {
-      //最后删除占位符
+      // 最后删除占位符
       localCache.removeObject(key);
     }
     //加入缓存
@@ -337,7 +337,7 @@ public abstract class BaseExecutor implements Executor {
   protected Connection getConnection(Log statementLog) throws SQLException {
     Connection connection = transaction.getConnection();
     if (statementLog.isDebugEnabled()) {
-      //如果需要打印Connection的日志，返回一个ConnectionLogger(代理模式, AOP思想)
+      // 如果需要打印Connection的日志，返回一个ConnectionLogger(代理模式, AOP思想)
       return ConnectionLogger.newInstance(connection, statementLog, queryStack);
     } else {
       return connection;

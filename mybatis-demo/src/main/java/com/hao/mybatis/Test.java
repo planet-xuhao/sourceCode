@@ -61,7 +61,10 @@ public class Test {
         // 12.通过MappedStatement得到boundSql对象，这里有待执行的sql信息，且有占位符，如果你开启了二级缓存，随后就是一些二级缓存的操作了
         //    如果没有则直接调用BaseExecutor.query方法，获得单例的错误输出对象ErrorContext，再看缓存中是否有结果，有就处理，没有就去数据库查queryFromDatabase
         // 13.这里就开始真正的查数据库了，就关联到了sqlSessionFactory.openSession()中设置Executor时设置的是什么，批量执行还是简单的执行，不设置就是SimpleExecutor
-        // 14.jdbc操作
+        // 14.通过configuration.newStatementHandler得到一个StatementHandler对象
+        //    new RoutingStatementHandler根据<select>标签上的statementType属性选择相应的处理器，大部分情况下该属性都不会赋值，那么此时的处理器将会是PreparedStatementHandler
+        //    此时我们已经得到sql参数了，需要使用类似与jdbc的方式来执行sql，这里mybatis做了一层封装。获得Statement对象：
+        //    使用openConnection获得一个connection连接，判断statementMapper是否开启了debug级别的日志，如果开启了则会使用代理模式获得一个被代理过的连接对象，以便用来打印日志org.apache.ibatis.logging.jdbc.ConnectionLogger.invoke
         List<User> users = userMapper.queryAllUser();
 
         users.forEach(System.out::println);
