@@ -86,17 +86,17 @@ public abstract class BaseStatementHandler implements StatementHandler {
     return parameterHandler;
   }
 
-  //准备语句
+  // 准备语句
   @Override
   public Statement prepare(Connection connection) throws SQLException {
     ErrorContext.instance().sql(boundSql.getSql());
     Statement statement = null;
     try {
-      //实例化Statement
+      // 实例化Statement
       statement = instantiateStatement(connection);
-      //设置超时
+      // 设置超时
       setStatementTimeout(statement);
-      //设置读取条数
+      // 设置读取条数
       setFetchSize(statement);
       return statement;
     } catch (SQLException e) {

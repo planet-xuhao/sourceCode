@@ -66,6 +66,12 @@ public class Test {
         //    随后调用prepareStatement，得到预编译的sql语句，在这里面，需要使用类似与jdbc的方式来执行sql，这里mybatis做了一层封装。获得Statement对象：
         //    使用openConnection获得一个connection连接，mybatis中的连接会使用PooledDataSource作为一个数据连接池，从其中进行获取。org.apache.ibatis.datasource.pooled.PooledDataSource.getConnection(),真正获取连接的地方org.apache.ibatis.datasource.unpooled.UnpooledDataSource.doGetConnection(java.lang.String, java.lang.String)
         //    判断statementMapper是否开启了debug级别的日志，如果开启了则会使用代理模式获得一个被代理过的连接对象，以便用来打印日志org.apache.ibatis.logging.jdbc.ConnectionLogger.invoke
+        // 15.然后调用RoutingStatementHandler.prepare得到一个JDBC预编译的statement
+        //    org.apache.ibatis.executor.statement.BaseStatementHandler.prepare模板方法模式得到statement，最终会执行connection.prepareStatement(sql);这也就是JDBC中获得statemen的步骤，此时的sql还是占位符形式
+        // 16.随后调用调用StatementHandler.parameterize设置预编译statement中的参数，用statement.setInt()这种方法，先判断参数的类型，选择相应的类型处理器，不同的类型set方法也不一样
+        //    比如int是ps.setInt, String是ps.setString，参数设置完后最终就是调用statement的execute()或executeQuery()。org.apache.ibatis.executor.statement.PreparedStatementHandler.query
+        //    如果你在mybatis中开启了日志，此时的statement会是一个代理的对象PreparedStatementLogger，这里会打印sel执行时的参数日志，就像Parameters：xxxxxx
+        // 17.调用stmt.getResultSet()并包装到一个ResultSetWrapper，得到结果集
         List<User> users = userMapper.queryAllUser();
 
         users.forEach(System.out::println);
