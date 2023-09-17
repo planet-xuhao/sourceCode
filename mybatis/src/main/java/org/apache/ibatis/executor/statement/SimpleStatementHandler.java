@@ -74,7 +74,7 @@ public class SimpleStatementHandler extends BaseStatementHandler {
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     String sql = boundSql.getSql();
     statement.execute(sql);
-    //先执行Statement.execute，然后交给ResultSetHandler.handleResultSets
+    // 先执行Statement.execute，然后交给ResultSetHandler.handleResultSets
     return resultSetHandler.<E>handleResultSets(statement);
   }
 

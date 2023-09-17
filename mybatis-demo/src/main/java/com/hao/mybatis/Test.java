@@ -71,7 +71,14 @@ public class Test {
         // 16.随后调用调用StatementHandler.parameterize设置预编译statement中的参数，用statement.setInt()这种方法，先判断参数的类型，选择相应的类型处理器，不同的类型set方法也不一样
         //    比如int是ps.setInt, String是ps.setString，参数设置完后最终就是调用statement的execute()或executeQuery()。org.apache.ibatis.executor.statement.PreparedStatementHandler.query
         //    如果你在mybatis中开启了日志，此时的statement会是一个代理的对象PreparedStatementLogger，这里会打印sel执行时的参数日志，就像Parameters：xxxxxx
-        // 17.调用stmt.getResultSet()并包装到一个ResultSetWrapper，得到结果集
+        // 17.处理查询得到的结果
+        //    调用stmt.getResultSet()并包装到一个ResultSetWrapper，得到结果集
+        //    mappedStatement.getResultMaps()得到mapper.xml中的ResultMap标签的内容，循环遍历ResultMap中的内容，即使xml中没有写字段的映射，至少也会又一个ResultMap
+        //    在handleResultSet中处理结果集，调用handleRowValues将数据库查询结果转换为java对象，处理ResultMap中的discriminator标签
+        //    通过org.apache.ibatis.executor.resultset.DefaultResultSetHandler.createResultObject(org.apache.ibatis.executor.resultset.ResultSetWrapper, org.apache.ibatis.mapping.ResultMap, org.apache.ibatis.executor.loader.ResultLoaderMap, java.lang.String)创建一个属性为空的对象
+        //    objectFactory.create工厂模式创建对象，传入一个Class得到一个Object，将得到的对象包装为MetaObject
+        //    随后在applyAutomaticMappings方法中将数据库查询出来的字段和java实体的字段做映射赋值，比如user_name赋值到userName，反射设置值
+        //    将最终的结果保存到一个list中，并关闭结果集。随后将结果加入缓存，最终得到结果
         List<User> users = userMapper.queryAllUser();
 
         users.forEach(System.out::println);

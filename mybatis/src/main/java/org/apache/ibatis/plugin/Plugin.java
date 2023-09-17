@@ -45,9 +45,9 @@ public class Plugin implements InvocationHandler {
   }
 
   public static Object wrap(Object target, Interceptor interceptor) {
-    //取得签名Map
+    // 取得签名Map，得到注解的内容
     Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
-    //取得要改变行为的类(ParameterHandler|ResultSetHandler|StatementHandler|Executor)
+    // 取得要改变行为的类(ParameterHandler|ResultSetHandler|StatementHandler|Executor)
     Class<?> type = target.getClass();
     //取得接口
     Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
@@ -78,16 +78,16 @@ public class Plugin implements InvocationHandler {
     }
   }
 
-  //取得签名Map
+  // 取得签名Map
   private static Map<Class<?>, Set<Method>> getSignatureMap(Interceptor interceptor) {
-    //取Intercepts注解，例子可参见ExamplePlugin.java
+    // 取Intercepts注解，例子可参见ExamplePlugin.java
     Intercepts interceptsAnnotation = interceptor.getClass().getAnnotation(Intercepts.class);
     // issue #251
-    //必须得有Intercepts注解，没有报错
+    // 必须得有Intercepts注解，没有报错
     if (interceptsAnnotation == null) {
       throw new PluginException("No @Intercepts annotation was found in interceptor " + interceptor.getClass().getName());      
     }
-    //value是数组型，Signature的数组
+    // value是数组型，Signature的数组
     Signature[] sigs = interceptsAnnotation.value();
     //每个class里有多个Method需要被拦截,所以这么定义
     Map<Class<?>, Set<Method>> signatureMap = new HashMap<Class<?>, Set<Method>>();
