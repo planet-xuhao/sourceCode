@@ -64,11 +64,11 @@ public class Plugin implements InvocationHandler {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
-      //看看如何拦截
+      // 看看如何拦截
       Set<Method> methods = signatureMap.get(method.getDeclaringClass());
-      //看哪些方法需要拦截
+      // 看哪些方法需要拦截
       if (methods != null && methods.contains(method)) {
-        //调用Interceptor.intercept，也即插入了我们自己的逻辑
+        // 调用Interceptor.intercept，也即插入了我们自己的逻辑
         return interceptor.intercept(new Invocation(target, method, args));
       }
       //最后还是执行原来逻辑
