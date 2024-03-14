@@ -15,9 +15,13 @@ import java.util.Date;
 @NoArgsConstructor
 public class User {
 
-    private int id;
+    private Integer id;
 
     private String name;
 
     private Date bir;
+
+    private String phoneNumber;
+
+    private Class classInfo;
 }

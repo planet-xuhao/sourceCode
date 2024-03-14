@@ -5,7 +5,49 @@
 
 <mapper namespace="com.hao.mybatis.mapper.UserMapper">
 
+
     <select id="queryAllUser" resultType="com.hao.mybatis.po.User" statementType="PREPARED">
         select * from user
     </select>
+
+    <select id="queryUserByIdOnCondition" resultType="com.hao.mybatis.po.User">
+        select * from user
+        <where>
+            <if test="id != null">
+             id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryUserByName" resultType="com.hao.mybatis.po.User">
+        select * from user where name = '${name}'
+    </select>
+
+    <select id="queryUserById" resultType="com.hao.mybatis.po.User">
+        select * from user where id = #{id}
+    </select>
+    <select id="getUserNameById" resultType="java.lang.String">
+        select name
+        from user where id = #{id}
+    </select>
+
+    <resultMap id="userResultMap" type="com.hao.mybatis.po.User">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <collection property="classInfo" column="id" select="queryClassInfoById"/>
+    </resultMap>
+
+    <select id="queryUserByUserId" resultMap="userResultMap">
+        select * from user where id = #{id}
+    </select>
+
+    <select id="queryClassInfoById" resultMap="classResultMap">
+        select * from class where user_id = #{id}
+    </select>
+
+    <resultMap id="classResultMap" type="com.hao.mybatis.po.Class">
+        <collection property="user" column="user_id" select="queryUserByUserId"/>
+    </resultMap>
+
+
 </mapper>

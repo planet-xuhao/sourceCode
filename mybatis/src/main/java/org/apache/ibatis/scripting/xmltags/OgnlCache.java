@@ -42,7 +42,7 @@ public final class OgnlCache {
 
   public static Object getValue(String expression, Object root) {
     try {
-      Map<Object, OgnlClassResolver> context = Ognl.createDefaultContext(root, new OgnlClassResolver());
+      Map<Object, OgnlClassResolver> context = Ognl.createDefaultContext(root, new OgnlMemberAccess(), new OgnlClassResolver(), null);
       return Ognl.getValue(parseExpression(expression), context, root);
     } catch (OgnlException e) {
       throw new BuilderException("Error evaluating expression '" + expression + "'. Cause: " + e, e);
